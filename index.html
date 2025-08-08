@@ -9,10 +9,11 @@
 
   <!-- 🔹 Navbar -->
 <!-- ปุ่มเลือกหน้า (แนะนำอยู่ด้านบนของ body) -->
-<div class="flex gap-2 bg-blue-100 p-2">
-  <button onclick="showSection('dashboard')" class="bg-white px-4 py-2 rounded">Dashboard</button>
-  <button onclick="showSection('register')" class="bg-white px-4 py-2 rounded">ลงทะเบียน</button>
+<div class="flex justify-center gap-4 py-4 bg-blue-100">
+  <button id="btnDashboard" onclick="showSection('dashboard')" class="px-4 py-2 rounded">Dashboard</button>
+  <button id="btnRegister" onclick="showSection('register')" class="px-4 py-2 rounded">ลงทะเบียน</button>
 </div>
+
 
 
 <!-- Dashboard Section -->
@@ -195,10 +196,28 @@ async function loadData() {
 }
 
 // โหลด dashboard ตอนเปิดหน้า
-window.onload = () => {
-  showSection('dashboard');
-  loadData();
+window.onload = function () {
+  showSection('dashboard'); // แสดง Dashboard ทันทีเมื่อโหลด
 };
+
+function showSection(sectionId) {
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('register').classList.add('hidden');
+  
+  // ซ่อนทุก section ก่อน แล้วแสดงเฉพาะที่เลือก
+  document.getElementById(sectionId).classList.remove('hidden');
+
+  // ตั้งค่า active ปุ่มด้านบน
+  document.getElementById('btnDashboard').classList.remove('bg-blue-700', 'text-white');
+  document.getElementById('btnRegister').classList.remove('bg-blue-700', 'text-white');
+
+  if (sectionId === 'dashboard') {
+    document.getElementById('btnDashboard').classList.add('bg-blue-700', 'text-white');
+  } else {
+    document.getElementById('btnRegister').classList.add('bg-blue-700', 'text-white');
+  }
+}
+
 
 
   </script>
