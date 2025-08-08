@@ -9,10 +9,11 @@
 
   <!-- 🔹 Navbar -->
 <!-- ปุ่มเลือกหน้า (แนะนำอยู่ด้านบนของ body) -->
-<div class="flex justify-center bg-blue-100 p-4 space-x-4">
-  <button onclick="showSection('form')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">ลงทะเบียน</button>
-  <button onclick="showSection('dashboard')" class="bg-white border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-100">แดชบอร์ด</button>
+<div class="flex gap-2 bg-blue-100 p-2">
+  <button onclick="showSection('dashboard')" class="bg-white px-4 py-2 rounded">Dashboard</button>
+  <button onclick="showSection('register')" class="bg-white px-4 py-2 rounded">ลงทะเบียน</button>
 </div>
+
 
 <!-- Dashboard Section -->
 <div id="dashboard" class="hidden p-4 max-w-5xl mx-auto">
@@ -65,36 +66,34 @@
 
 
   <!-- 🔹 Section: Register -->
-  <div id="register" class="hidden p-6">
-    <h2 class="text-lg font-semibold mb-2">ลงทะเบียนศิษย์เก่า</h2>
-    <form id="alumniForm" class="space-y-4">
-      <input type="text" name="id" placeholder="รหัสนักเรียน" class="block w-full border p-2 rounded" required>
-      <input type="text" name="fname" placeholder="ชื่อ" class="block w-full border p-2 rounded" required>
-      <input type="text" name="lname" placeholder="สกุล" class="block w-full border p-2 rounded" required>
-      <!-- ตัวอย่างในฟอร์ม -->
-        <label class="block text-gray-700">เพศ:</label>
-        <select name="gender" class="border rounded w-full p-2 mb-4" required>
-          <option value="">-- เลือกเพศ --</option>
-          <option value="ชาย">ชาย</option>
-          <option value="หญิง">หญิง</option>
-        </select>
+<div id="register" class="hidden p-4">
+  <h2 class="text-xl font-bold mb-2">ลงทะเบียนศิษย์เก่า</h2>
+  <form id="alumniForm" class="grid grid-cols-1 gap-2">
+    <input type="text" name="studentId" placeholder="รหัสนักเรียน" required class="border p-2 rounded">
+    <input type="text" name="firstName" placeholder="ชื่อ" required class="border p-2 rounded">
+    <input type="text" name="lastName" placeholder="นามสกุล" required class="border p-2 rounded">
+    <select name="gender" required class="border p-2 rounded">
+      <option value="">เลือกเพศ</option>
+      <option value="ชาย">ชาย</option>
+      <option value="หญิง">หญิง</option>
+    </select>
+    <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์" required class="border p-2 rounded">
+    <input type="number" name="gradYear" placeholder="ปีที่จบ (พ.ศ.)" required class="border p-2 rounded">
+    <input type="number" step="0.01" name="gpa" placeholder="เกรดเฉลี่ย" required class="border p-2 rounded">
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded">บันทึกข้อมูล</button>
+  </form>
+</div>
 
-      <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์" class="block w-full border p-2 rounded" required>
-      <input type="number" name="grad" placeholder="ปีที่สำเร็จ (พ.ศ.)" class="block w-full border p-2 rounded" required>
-      <input type="number" name="gpa" step="0.01" placeholder="ผลการเรียนเฉลี่ย" class="block w-full border p-2 rounded" required>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">บันทึก</button>
-    </form>
-  </div>
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxZu8RMujbjmDcARWLpbZEcvj99oU77ss9xVckIYMOAMVBesHGK6cpJVjook-L90x8K/exec';
 
-    function showSection(sectionId) {
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('register').classList.add('hidden');
-      document.getElementById(sectionId).classList.remove('hidden');
-      if (sectionId === 'dashboard') loadData();
-    }
+  function showSection(id) {
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('register').classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+  }
+
 
     // 📥 ฟอร์มบันทึกข้อมูล
     document.getElementById('alumniForm').addEventListener('submit', async (e) => {
