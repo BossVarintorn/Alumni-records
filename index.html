@@ -168,7 +168,11 @@ async function loadData() {
 }
 
 // โหลด dashboard ตอนเปิดหน้า
-window.onload = () => showSection('dashboard');
+window.onload = () => {
+  showSection('dashboard');
+  loadData();
+};
+
 
   </script>
 </body>
