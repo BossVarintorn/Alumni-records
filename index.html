@@ -77,32 +77,35 @@
         });
     });
 
-    async function loadData() {
-      const res = await fetch(scriptURL + '?read=1');
-      const data = await res.json();
-      const body = document.getElementById('alumniTableBody');
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      body.innerHTML = '';
-      let count = 0;
-      data.forEach(row => {
-        const [id, fname, lname, phone, grad, gpa] = row;
-        const keyword = `${fname} ${lname}`.toLowerCase();
-        if (!search || keyword.includes(search)) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td class="border p-1">${id}</td>
-            <td class="border p-1">${fname}</td>
-            <td class="border p-1">${lname}</td>
-            <td class="border p-1">${grad}</td>
-            <td class="border p-1">${gpa}</td>
-          `;
-          body.appendChild(tr);
-          count++;
-        }
-      });
-      document.getElementById('totalCount').textContent = count;
-      console.log(data);
+async function loadData() {
+  const res = await fetch(scriptURL + '?read=1');
+  const data = await res.json();
+  const rows = data.slice(1); // ตัด header ออก
+  const body = document.getElementById('alumniTableBody');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  body.innerHTML = '';
+  let count = 0;
+
+  rows.forEach(row => {
+    const [id, fname, lname, phone, grad, gpa] = row;
+    const keyword = `${fname} ${lname}`.toLowerCase();
+    if (!search || keyword.includes(search)) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="border p-1">${id}</td>
+        <td class="border p-1">${fname}</td>
+        <td class="border p-1">${lname}</td>
+        <td class="border p-1">${grad}</td>
+        <td class="border p-1">${gpa}</td>
+      `;
+      body.appendChild(tr);
+      count++;
     }
+  });
+
+  document.getElementById('totalCount').textContent = count;
+}
+
 
     document.getElementById('searchInput').addEventListener('input', loadData);
     window.onload = loadData;
