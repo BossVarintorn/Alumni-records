@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ทะเบียนศิษย์เก่า</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-blue-50 min-h-screen font-sans">
+
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+    <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">ลงทะเบียนศิษย์เก่า</h1>
+    <form id="alumniForm" class="space-y-4">
+      <div>
+        <label class="block">รหัสนักเรียน</label>
+        <input name="studentId" required class="w-full border rounded p-2" />
+      </div>
+      <div class="flex gap-4">
+        <div class="w-1/2">
+          <label class="block">ชื่อ</label>
+          <input name="firstName" required class="w-full border rounded p-2" />
+        </div>
+        <div class="w-1/2">
+          <label class="block">สกุล</label>
+          <input name="lastName" required class="w-full border rounded p-2" />
+        </div>
+      </div>
+      <div>
+        <label class="block">เบอร์โทรศัพท์</label>
+        <input name="phone" type="tel" required class="w-full border rounded p-2" />
+      </div>
+      <div>
+        <label class="block">ปีที่สำเร็จการศึกษา (พ.ศ.)</label>
+        <input name="gradYear" type="number" required class="w-full border rounded p-2" />
+      </div>
+      <div>
+        <label class="block">ผลการเรียนเฉลี่ย</label>
+        <input name="gpa" type="number" step="0.01" required class="w-full border rounded p-2" />
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">ส่งข้อมูล</button>
+    </form>
+  </div>
+
+  <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-blue-600 mb-4">แดชบอร์ดศิษย์เก่า</h2>
+    <p class="mb-2">จำนวนศิษย์เก่าทั้งหมด: <span id="totalCount" class="font-bold text-blue-700">0</span> คน</p>
+    <input id="searchInput" placeholder="ค้นหาชื่อหรือสกุล" class="w-full border rounded p-2 mb-4" />
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-blue-100">
+          <th class="border p-2">รหัส</th>
+          <th class="border p-2">ชื่อ</th>
+          <th class="border p-2">สกุล</th>
+          <th class="border p-2">ปีจบ</th>
+          <th class="border p-2">GPA</th>
+        </tr>
+      </thead>
+      <tbody id="alumniTableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/ลิ้งค์.Exec/exec';
+
+    document.getElementById('alumniForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(() => {
+          Swal.fire('สำเร็จ!', 'ข้อมูลถูกส่งเรียบร้อยแล้ว', 'success');
+          form.reset();
+          loadData();
+        })
+        .catch(() => {
+          Swal.fire('ผิดพลาด!', 'ไม่สามารถส่งข้อมูลได้', 'error');
+        });
+    });
+
+    async function loadData() {
+      const res = await fetch(scriptURL + '?read=1');
+      const data = await res.json();
+      const body = document.getElementById('alumniTableBody');
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      body.innerHTML = '';
+      let count = 0;
+      data.forEach(row => {
+        const [id, fname, lname, phone, grad, gpa] = row;
+        const keyword = `${fname} ${lname}`.toLowerCase();
+        if (!search || keyword.includes(search)) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="border p-1">${id}</td>
+            <td class="border p-1">${fname}</td>
+            <td class="border p-1">${lname}</td>
+            <td class="border p-1">${grad}</td>
+            <td class="border p-1">${gpa}</td>
+          `;
+          body.appendChild(tr);
+          count++;
+        }
+      });
+      document.getElementById('totalCount').textContent = count;
+    }
+
+    document.getElementById('searchInput').addEventListener('input', loadData);
+    window.onload = loadData;
+  </script>
+</body>
+</html>
