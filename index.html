@@ -198,6 +198,7 @@ async function loadData() {
 // โหลด dashboard ตอนเปิดหน้า
 window.onload = function () {
   showSection('dashboard'); // แสดง Dashboard ทันทีเมื่อโหลด
+  loadData();
 };
 
 function showSection(sectionId) {
