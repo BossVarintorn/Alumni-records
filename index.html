@@ -8,34 +8,59 @@
 <body class="bg-white text-gray-800 font-sans">
 
   <!-- 🔹 Navbar -->
-  <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold">ระบบทะเบียนศิษย์เก่า</h1>
-    <div>
-      <button onclick="showSection('dashboard')" class="px-4 py-2 bg-white text-blue-600 rounded hover:bg-blue-100">แดชบอร์ด</button>
-      <button onclick="showSection('register')" class="px-4 py-2 bg-white text-blue-600 rounded hover:bg-blue-100 ml-2">ลงทะเบียน</button>
+<!-- ปุ่มเลือกหน้า (แนะนำอยู่ด้านบนของ body) -->
+<div class="flex justify-center bg-blue-100 p-4 space-x-4">
+  <button onclick="showSection('form')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">ลงทะเบียน</button>
+  <button onclick="showSection('dashboard')" class="bg-white border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-100">แดชบอร์ด</button>
+</div>
+
+<!-- Dashboard Section -->
+<div id="dashboard" class="hidden p-4 max-w-5xl mx-auto">
+  <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">แดชบอร์ดศิษย์เก่า</h2>
+  
+  <!-- กล่องข้อมูลรวม -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-blue-100 rounded-xl p-4 shadow">
+      <h3 class="text-sm text-gray-600">ผู้ลงทะเบียนทั้งหมด</h3>
+      <p id="totalCount" class="text-3xl font-bold text-blue-800">0</p>
+    </div>
+    <div class="bg-blue-100 rounded-xl p-4 shadow">
+      <h3 class="text-sm text-gray-600">นักศึกษาชาย</h3>
+      <p id="maleCount" class="text-3xl font-bold text-blue-800">0</p>
+    </div>
+    <div class="bg-blue-100 rounded-xl p-4 shadow">
+      <h3 class="text-sm text-gray-600">นักศึกษาหญิง</h3>
+      <p id="femaleCount" class="text-3xl font-bold text-blue-800">0</p>
+    </div>
+    <div class="bg-blue-100 rounded-xl p-4 shadow">
+      <h3 class="text-sm text-gray-600">ปีจบล่าสุด</h3>
+      <p id="latestYear" class="text-3xl font-bold text-blue-800">-</p>
     </div>
   </div>
 
-  <!-- 🔹 Section: Dashboard -->
-  <div id="dashboard" class="p-6">
-    <h2 class="text-lg font-semibold mb-2">แดชบอร์ด</h2>
-    <input type="text" id="searchInput" oninput="loadData()" placeholder="ค้นหาชื่อ/นามสกุล" class="p-2 border rounded mb-4 w-full max-w-md" />
-    <p class="mb-2">จำนวนศิษย์เก่าทั้งหมด: <span id="totalCount">0</span></p>
-    <div class="overflow-x-auto">
-      <table class="min-w-full border text-sm">
-        <thead class="bg-blue-100">
-          <tr>
-            <th class="border p-1">รหัส</th>
-            <th class="border p-1">ชื่อ</th>
-            <th class="border p-1">สกุล</th>
-            <th class="border p-1">ปีที่จบ</th>
-            <th class="border p-1">เกรดเฉลี่ย</th>
-          </tr>
-        </thead>
-        <tbody id="alumniTableBody"></tbody>
-      </table>
-    </div>
+  <!-- ช่องค้นหา -->
+  <input type="text" id="searchInput" oninput="loadData()" placeholder="ค้นหาชื่อ หรือ สกุล..." class="border border-gray-300 rounded w-full p-2 mb-4">
+
+  <!-- ตาราง -->
+  <div class="overflow-auto">
+    <table class="w-full border-collapse border border-gray-300 text-sm">
+      <thead class="bg-blue-200">
+        <tr>
+          <th class="border p-2">รหัส</th>
+          <th class="border p-2">ชื่อ</th>
+          <th class="border p-2">สกุล</th>
+          <th class="border p-2">เพศ</th>
+          <th class="border p-2">ปีจบ</th>
+          <th class="border p-2">GPA</th>
+        </tr>
+      </thead>
+      <tbody id="alumniTableBody">
+        <!-- รายการจะแสดงตรงนี้ -->
+      </tbody>
+    </table>
   </div>
+</div>
+
 
   <!-- 🔹 Section: Register -->
   <div id="register" class="hidden p-6">
@@ -44,6 +69,14 @@
       <input type="text" name="id" placeholder="รหัสนักเรียน" class="block w-full border p-2 rounded" required>
       <input type="text" name="fname" placeholder="ชื่อ" class="block w-full border p-2 rounded" required>
       <input type="text" name="lname" placeholder="สกุล" class="block w-full border p-2 rounded" required>
+      <!-- ตัวอย่างในฟอร์ม -->
+        <label class="block text-gray-700">เพศ:</label>
+        <select name="gender" class="border rounded w-full p-2 mb-4" required>
+          <option value="">-- เลือกเพศ --</option>
+          <option value="ชาย">ชาย</option>
+          <option value="หญิง">หญิง</option>
+        </select>
+
       <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์" class="block w-full border p-2 rounded" required>
       <input type="number" name="grad" placeholder="ปีที่สำเร็จ (พ.ศ.)" class="block w-full border p-2 rounded" required>
       <input type="number" name="gpa" step="0.01" placeholder="ผลการเรียนเฉลี่ย" class="block w-full border p-2 rounded" required>
@@ -82,35 +115,55 @@
     });
 
     // 📊 โหลดข้อมูลแดชบอร์ด
-    async function loadData() {
-      const res = await fetch(scriptURL + '?read=1');
-      const data = await res.json();
-      const rows = data.slice(1); // ตัด header ออก
+async function loadData() {
+  const res = await fetch(scriptURL + '?read=1');
+  const data = await res.json();
+  const rows = data.slice(1); // ตัด header
 
-      const body = document.getElementById('alumniTableBody');
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      body.innerHTML = '';
-      let count = 0;
+  const body = document.getElementById('alumniTableBody');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  body.innerHTML = '';
 
-      rows.forEach(row => {
-        const [id, fname, lname, phone, grad, gpa] = row;
-        const keyword = `${fname} ${lname}`.toLowerCase();
-        if (!search || keyword.includes(search)) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td class="border p-1">${id}</td>
-            <td class="border p-1">${fname}</td>
-            <td class="border p-1">${lname}</td>
-            <td class="border p-1">${grad}</td>
-            <td class="border p-1">${gpa}</td>
-          `;
-          body.appendChild(tr);
-          count++;
-        }
-      });
+  // ตัวแปรเก็บสถิติ
+  let total = 0;
+  let male = 0;
+  let female = 0;
+  let latestYear = 0;
 
-      document.getElementById('totalCount').textContent = count;
+  rows.forEach(row => {
+    const [id, fname, lname, phone, year, gpa, gender] = row;
+    const keyword = `${fname} ${lname}`.toLowerCase();
+    if (!search || keyword.includes(search)) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="border p-1">${id}</td>
+        <td class="border p-1">${fname}</td>
+        <td class="border p-1">${lname}</td>
+        <td class="border p-1">${gender}</td>
+        <td class="border p-1">${year}</td>
+        <td class="border p-1">${gpa}</td>
+      `;
+      body.appendChild(tr);
+      total++;
+
+      // นับเพศ
+      if (gender === "ชาย") male++;
+      else if (gender === "หญิง") female++;
+
+      // หาปีจบล่าสุด
+      if (parseInt(year) > latestYear) {
+        latestYear = parseInt(year);
+      }
     }
+  });
+
+  // อัปเดต UI
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('maleCount').textContent = male;
+  document.getElementById('femaleCount').textContent = female;
+  document.getElementById('latestYear').textContent = latestYear || '-';
+}
+
 
     // โหลด dashboard ตอนเปิดหน้า
     window.onload = () => showSection('dashboard');
