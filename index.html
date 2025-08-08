@@ -120,7 +120,7 @@
 async function loadData() {
   const res = await fetch(scriptURL + '?read=1');
   const data = await res.json();
-  const rows = data.slice(1); // ตัด header
+  const rows = data.slice(1); // ละ header แถวแรก
 
   const body = document.getElementById('alumniTableBody');
   const search = document.getElementById('searchInput').value.toLowerCase();
@@ -128,14 +128,14 @@ async function loadData() {
 
   // ตัวแปรเก็บสถิติ
   let total = 0;
-  let male = 0;
-  let female = 0;
-  let latestYear = 0;
+  let maleCount = 0;
+  let femaleCount = 0;
+  let currentGradYear = 0;
 
   rows.forEach(row => {
-    rows.forEach(row => {
     const [id, fname, lname, gender, phone, grad, gpa] = row;
     const keyword = `${fname} ${lname}`.toLowerCase();
+
     if (!search || keyword.includes(search)) {
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -149,32 +149,28 @@ async function loadData() {
       `;
       body.appendChild(tr);
       total++;
+    }
 
-      // นับเพศ
-          let maleCount = 0;
-          let femaleCount = 0;
-          let currentGradYear = 0;
-          
-          rows.forEach(row => {
-            const [id, fname, lname, gender, phone, grad, gpa] = row;
-            if (gender === 'ชาย') maleCount++;
-            else if (gender === 'หญิง') femaleCount++;
-          
-            if (parseInt(grad) > currentGradYear) {
-              currentGradYear = parseInt(grad);
-            }
-          });
+    // นับเพศ
+    if (gender === 'ชาย') maleCount++;
+    else if (gender === 'หญิง') femaleCount++;
+
+    // ปีจบสูงสุด
+    if (parseInt(grad) > currentGradYear) {
+      currentGradYear = parseInt(grad);
+    }
+  });
 
   // อัปเดต UI
-      document.getElementById('totalCount').textContent = rows.length;
-      document.getElementById('maleCount').textContent = maleCount;
-      document.getElementById('femaleCount').textContent = femaleCount;
-      document.getElementById('latestGradYear').textContent = currentGradYear;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('maleCount').textContent = maleCount;
+  document.getElementById('femaleCount').textContent = femaleCount;
+  document.getElementById('latestGradYear').textContent = currentGradYear || "-";
 }
 
+// โหลด dashboard ตอนเปิดหน้า
+window.onload = () => showSection('dashboard');
 
-    // โหลด dashboard ตอนเปิดหน้า
-    window.onload = () => showSection('dashboard');
   </script>
 </body>
 </html>
