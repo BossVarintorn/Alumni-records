@@ -196,9 +196,9 @@ async function loadData() {
 }
 
 // โหลด dashboard ตอนเปิดหน้า
-window.onload = function () {
-  showSection('dashboard'); // แสดง Dashboard ทันทีเมื่อโหลด
-  loadData();
+window.onload = function() {
+  console.log("เรียก showSection dashboard แล้ว");
+  showSection('dashboard');
 };
 
 function showSection(sectionId) {
